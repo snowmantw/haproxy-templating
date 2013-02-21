@@ -76,13 +76,13 @@ class Driver():
 		f.close
 		return self
 
-	# Root privlege require ?
+	# Root privilege require ?
 	def start_service(self):
 		os.system("haproxy -f %s" % (self.hacfg_path) )
 		return self
 
 (Driver()
 .templating()
-.hapath('/home/ejabberd/ejabberd.cfg')
+.hapath('/home/ejabberd/ejabberd.cfg') # For my testing environment.
 .write_cfg()
 .start_service())
