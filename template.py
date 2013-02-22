@@ -30,7 +30,7 @@ class Templating():
 	# Read nodes from a csv, host must be first field.
 	def read_list_nodes(self, path):
 
-		with open('nodes.csv', 'r') as f:
+		with open(path, 'rb') as f:
 			rows = csv.reader(f, delimiter=",")
 			self.hosts = map(lambda r: r[0],rows)
 		f.close
@@ -56,11 +56,12 @@ class Driver():
 	def __init__(self):
 		self.hacfg  = ""
 		self.hacfg_path = ""
+		self.basepath = os.path.dirname(os.path.realpath(__file__))
 
-	def templating(self): 
+	def templating(self, nodelist): 
 		self.hacfg = (Templating().
-			read_tpl('node.tpl','haproxy.cfg.tpl').
-			read_list_nodes('node.csv').
+			read_tpl('%s/node.tpl' % (self.basepath),'%s/haproxy.cfg.tpl' % (self.basepath)).
+			read_list_nodes(nodelist).
 			fill_nodes().
 			fill_haproxy().
 			done())
@@ -76,13 +77,8 @@ class Driver():
 		f.close
 		return self
 
-	# Root privilege require ?
-	def start_service(self):
-		os.system("haproxy -f %s" % (self.hacfg_path) )
+	# Pass in haproxy command, must with '-f' option to read config file.
+	def start_service(self, haproxy):
+		os.system("%s %s" % (haproxy, self.hacfg_path) )
 		return self
 
-(Driver()
-.templating()
-.hapath('/home/ejabberd/ejabberd.cfg') # For my testing environment.
-.write_cfg()
-.start_service())
