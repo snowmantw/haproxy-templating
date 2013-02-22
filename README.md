@@ -16,6 +16,8 @@ You may need put some wrapper script with root priviledge in system path, and ex
 this tool via that script to ensure some operations works, like mergeing to system configure, 
 or run service with priviledge.
 
+See the "scripts-example" directory for wrapper scripts.
+
 
 ## License
 
